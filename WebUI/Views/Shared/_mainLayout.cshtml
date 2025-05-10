@@ -1,0 +1,140 @@
+﻿
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link rel="stylesheet" href="/industrious/assets/css/main.css">
+    <title>@ViewData["Title"] at Formula</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="/css/site.css">
+    <!-- Slick Carousel CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+
+    <!-- Slick Carousel Theme (optional) -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+</head>
+
+
+<body class="is-preload">
+
+<!-- Header -->
+<header id="header">
+    <a class="logo" asp-controller="Home" asp-action="Index">Racing-formula</a>
+    <nav>
+        <a href="#menu">Menu</a>
+    </nav>
+</header>
+
+
+<!-- Nav -->
+<nav id="menu">
+    <ul class="links">
+        <li>
+            <a asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+        <li>
+            <a asp-controller="Event" asp-action="Index">Events</a>
+        </li>
+        <li>
+            <a asp-controller="Car" asp-action="Index">Cars</a>
+        </li>
+        <li>
+            <a asp-controller="Race" asp-action="Index">Races</a>
+        </li>
+        <li>
+            <a asp-controller="Booking" asp-action="BookingRequest">Request ride</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+
+<footer id="footer">
+    <div class="inner">
+        <div class="content">
+            <section>
+                <h3>Egypt Racing Formula</h3>
+                <p >
+                    Fueled by passion. Driven by innovation. At Formula Racing,
+                    we don't just build machines — we craft experiences that ignite
+                    adrenaline and chase the thrill of speed. From world-class events 
+                    to precision-engineered cars, we bring the future of motorsport right to your fingertips.
+                </p>
+            </section>
+            <section>
+                <h4>What do You wait for!!</h4>
+                <ul class="alt">
+                    <li>
+                        <a asp-controller="Event" asp-action="Index">Events</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Car" asp-action="Index">Cars</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Race" asp-action="Index">Races</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Booking" asp-action="BookingRequest">Request ride</a>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h4>Pharaoh Code Contacts</h4>
+                <ul class="plain">
+                    <li>
+                        <a href="https://www.linkedin.com/in/marwan-tarek-566a32231/">
+                            <i class="icon fa-linkedin">&nbsp;</i>LinkedIn
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.facebook.com/profile.php?id=100076404596165">
+                            <i class="icon fa-facebook">&nbsp;</i>Facebook
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.instagram.com/marwan__.tarek/"><i class="icon fa-instagram">&nbsp;</i>Instagram</a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/MarwanTarekZaky"><i class="icon fa-github">&nbsp;</i>Github</a>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</footer>
+<div id="copyright " class="copyright">
+    Design by <a href="#menu">Pharaoh Code  © 2025 Formula Racing. All rights reserved.</a>.
+</div>
+
+    <!-- Scripts -->
+    <script src="/industrious/assets/js/jquery.min.js"></script>
+    <script src="/industrious/assets/js/browser.min.js"></script>
+    <script src="/industrious/assets/js/breakpoints.min.js"></script>
+    <script src="/industrious/assets/js/util.js"></script>
+    <script src="/industrious/assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- jQuery (must be first) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Slick Carousel JS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
+

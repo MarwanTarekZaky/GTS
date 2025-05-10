@@ -1,0 +1,41 @@
+﻿@model IEnumerable<RaceDTO>
+
+@{
+    ViewData["Title"] = "Race List";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a href="@Url.Action("Create", "Race")" class="btn btn-primary">Create New Race</a>
+</p>
+
+<table class="table ">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Booked</th>
+        <th>Date</th>
+        <th>Location</th>
+        <th>Occupancy</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var race in Model)
+    {
+        <tr>
+            <td>@race.Name</td>
+            <td>@race.NumberOfBookedSeats</td>
+            <td>@race.Date.ToString("MM/dd/yyyy")</td>
+            <td>@race.LocationName</td>
+            <td>@race.Occupancy</td>
+            <td>
+                <a href="@Url.Action("Details", "Race", new { id = race.Id })" class="btn btn-info">Details</a>
+                <a href="@Url.Action("Edit", "Race", new { id = race.Id })" class="btn btn-warning">Edit</a>
+                <a href="@Url.Action("Delete", "Race", new { id = race.Id })" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

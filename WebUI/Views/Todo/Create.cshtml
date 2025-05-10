@@ -1,0 +1,77 @@
+﻿@using Azure.Core
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<Application.DTOs.TodoDto>
+@{
+    ViewData["Title"] = "Todo List";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<!-- Filter Form -->
+<form method="get" action="@Url.Action("ListAllTodos", "Todo")">
+    <div class="row">
+        <div class="col">
+            <input type="text" class="form-control" name="status" placeholder="Status" value="@ViewData["Status"]" />
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" name="priority" placeholder="Priority" value="@ViewData["Priority"]" />
+        </div>
+        <div class="col">
+            <input type="date" class="form-control" name="startDate" placeholder="Start Date" value="@ViewData["StartDate"]" />
+        </div>
+        <div class="col">
+            <input type="date" class="form-control" name="endDate" placeholder="End Date" value="@ViewData["EndDate"]" />
+        </div>
+        <div class="col">
+            <select name="orderBy" class="form-control">
+                <option value="Title" selected="@((ViewData["OrderBy"] as string) == "Title")">Title</option>
+                <option value="CreatedDate" selected="@((ViewData["OrderBy"] as string) == "CreatedDate")">Created Date</option>
+                <option value="DueDate" selected="@((ViewData["OrderBy"] as string) == "DueDate")">Due Date</option>
+                <option value="Priority" selected="@((ViewData["OrderBy"] as string) == "Priority")">Priority</option>
+                <option value="Status" selected="@((ViewData["OrderBy"] as string) == "Status")">Status</option>
+            </select>
+        </div>
+        <div class="col">
+            <select name="sortOrder" class="form-control">
+                <option value="asc" selected="@((ViewData["SortOrder"] as string) == "asc")">Ascending</option>
+                <option value="desc" selected="@((ViewData["SortOrder"] as string) == "desc")">Descending</option>
+            </select>
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+</form>
+
+<p>
+    <a href="@Url.Action("Create", "Todo")" class="btn btn-primary">Create New ToDo</a>
+</p>
+<hr>
+<table class="table ">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Priority</th>
+        <th>Due Date</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var todo in Model)
+    {
+        <tr>
+            <td>@todo.Title</td>
+            <td>@todo.Status</td>
+            <td>@todo.Priority</td>
+            <td>@todo.DueDate?.ToString("yyyy-MM-dd")</td>
+            <td>
+                <a href="@Url.Action("Confirm", "Todo", new { id = todo.Id })" class="btn btn-info">Confirm</a>
+                <a href="@Url.Action("Edit", "Todo", new { id = todo.Id })" class="btn btn-warning">Edit</a>
+                <a href="@Url.Action("Delete", "Todo", new { id = todo.Id })" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    
+    </tbody>
+</table>

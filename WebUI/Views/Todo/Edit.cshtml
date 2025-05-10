@@ -1,0 +1,191 @@
+﻿@using Azure.Core
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<Application.DTOs.TodoDto>
+@{
+    ViewData["Title"] = "Todo List";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<!-- Filter Form -->
+<form method="get" action="@Url.Action("ListAllTodos", "Todo")">
+    <div class="row">
+        <div class="col">
+            <input type="text" class="form-control" name="status" placeholder="Status" value="@ViewData["Status"]" />
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" name="priority" placeholder="Priority" value="@ViewData["Priority"]" />
+        </div>
+        <div class="col">
+            <input type="date" class="form-control" name="startDate" placeholder="Start Date" value="@ViewData["StartDate"]" />
+        </div>
+        <div class="col">
+            <input type="date" class="form-control" name="endDate" placeholder="End Date" value="@ViewData["EndDate"]" />
+        </div>
+        <div class="col">
+            <select name="orderBy" class="form-control">
+                <option value="Title" selected="@((ViewData["OrderBy"] as string) == "Title")">Title</option>
+                <option value="CreatedDate" selected="@((ViewData["OrderBy"] as string) == "CreatedDate")">Created Date</option>
+                <option value="DueDate" selected="@((ViewData["OrderBy"] as string) == "DueDate")">Due Date</option>
+                <option value="Priority" selected="@((ViewData["OrderBy"] as string) == "Priority")">Priority</option>
+                <option value="Status" selected="@((ViewData["OrderBy"] as string) == "Status")">Status</option>
+            </select>
+        </div>
+        <div class="col">
+            <select name="sortOrder" class="form-control">
+                <option value="asc" selected="@((ViewData["SortOrder"] as string) == "asc")">Ascending</option>
+                <option value="desc" selected="@((ViewData["SortOrder"] as string) == "desc")">Descending</option>
+            </select>
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+</form>
+
+<p>
+    <a href="@Url.Action("Create", "Todo")" class="btn btn-primary">Create New ToDo</a>
+</p>
+<hr>
+<table class="table ">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Priority</th>
+        <th>Due Date</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var todo in Model)
+    {
+        <tr>
+            <td>@todo.Title</td>
+            <td>@todo.Status</td>
+            <td>@todo.Priority</td>
+            <td>@todo.DueDate?.ToString("yyyy-MM-dd")</td>
+            <td>
+                <a class="btn btn-success" onclick="openMarkAsCompleteModal('@todo.Id')">Mark as Complete</a>
+                <a href="@Url.Action("Edit", "Todo", new { id = todo.Id })" class="btn btn-warning">Edit</a>
+                <a onclick="openDeleteModal('@todo.Id')" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    
+    </tbody>
+</table>
+
+<!-- Mark as Complete Confirmation Modal -->
+<div class="modal fade" id="markAsCompleteModal" tabindex="-1" aria-labelledby="markAsCompleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="markAsCompleteModalLabel">Mark Todo as Complete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to mark this todo as complete?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-success" id="confirmMarkAsCompleteBtn">Yes, Mark as Complete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Todo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this todo?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script to handle delete confirmation -->
+<!-- Your custom script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let todoIdToDelete = null;
+        let todoIdToMarkComplete = null;
+
+        // Make functions globally accessible
+        window.openDeleteModal = function(id) {
+            todoIdToDelete = id;
+            $('#deleteModal').modal('show');
+        };
+
+        window.openMarkAsCompleteModal = function(id) {
+            todoIdToMarkComplete = id;
+            $('#markAsCompleteModal').modal('show');
+        };
+
+        // Handle delete confirmation
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+            try {
+                const response = await fetch(`http://localhost:5237/api/todo/${todoIdToDelete}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    alert('Todo deleted successfully!');
+                    location.reload(); // Refresh the page
+                } else {
+                    const errorText = await response.text();
+                    alert('Failed to delete todo: ' + errorText);
+                }
+
+                $('#deleteModal').modal('hide');
+            } catch (error) {
+                alert('Error occurred while deleting todo.');
+                console.error(error);
+            }
+        });
+
+        // Close delete modal without doing anything
+        $('#deleteModal').on('hidden.bs.modal', function () {
+            todoIdToDelete = null; // Reset todo ID
+        });
+
+        // Handle Mark as Complete confirmation
+        document.getElementById('confirmMarkAsCompleteBtn').addEventListener('click', async function() {
+            try {
+                const response = await fetch(`http://localhost:5237/api/todo/${todoIdToMarkComplete}/complete`, {
+                    method: 'PATCH',
+                });
+
+                if (response.ok) {
+                    alert('Todo marked as complete!');
+                    location.reload();
+                } else {
+                    const errorText = await response.text();
+                    alert('Failed to mark todo as complete: ' + errorText);
+                }
+
+                $('#markAsCompleteModal').modal('hide');
+            } catch (error) {
+                alert('Error occurred while marking todo as complete.');
+                console.error(error);
+            }
+        });
+
+        // Close Mark as Complete modal without doing anything
+        $('#markAsCompleteModal').on('hidden.bs.modal', function () {
+            todoIdToMarkComplete = null;
+        });
+    });
+</script>
